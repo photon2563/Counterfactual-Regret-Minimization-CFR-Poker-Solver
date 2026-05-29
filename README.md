@@ -70,15 +70,15 @@ CFR iteratively minimizes *regret* at each information set. The key insight: if 
 
 **Regret Matching**: At each information set, the strategy is proportional to accumulated positive regrets:
 
-```
-σ^{T+1}(I, a) = R_+^T(I, a) / Σ_b R_+^T(I, b)
-```
+$$
+\sigma^{T+1}(I, a) = \frac{R_+^T(I, a)}{\sum_b R_+^T(I, b)}
+$$
 
 **Counterfactual Value**: The expected utility weighted by opponent reach probability:
 
-```
-v_i(σ, I) = Σ_{h∈I} π_{-i}^σ(h) · Σ_{z∈Z_h} π^σ(h,z) · u_i(z)
-```
+$$
+v_i(\sigma, I) = \sum_{h \in I} \pi_{-i}^\sigma(h) \sum_{z \in Z_h} \pi^\sigma(h,z) u_i(z)
+$$
 
 ### Algorithm Variants
 
@@ -93,9 +93,9 @@ v_i(σ, I) = Σ_{h∈I} π_{-i}^σ(h) · Σ_{z∈Z_h} π^σ(h,z) · u_i(z)
 
 Exploitability measures how far a strategy is from Nash:
 
-```
-exploit(σ) = max_{σ'_0} u_0(σ'_0, σ_1) + max_{σ'_1} u_1(σ_0, σ'_1)
-```
+$$
+exploit(\sigma) = \max_{\sigma'_0} u_0(\sigma'_0, \sigma_1) + \max_{\sigma'_1} u_1(\sigma_0, \sigma'_1)
+$$
 
 > **Critical implementation detail**: The best response must operate at the *information set level*, not the state level. A state-level BR allows the responder to distinguish between states in the same info set (omniscient play), giving inflated exploitability values.
 
