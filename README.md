@@ -1,4 +1,4 @@
-# ♠️ GTO Poker Solver: Superhuman AI for Imperfect-Information Games
+# ♠️ GTO Poker Solver: AI for Imperfect-Information Games
 
 ![C++](https://img.shields.io/badge/Engine-C%2B%2B%20Performance-blue)
 ![Python](https://img.shields.io/badge/Architecture-Python%203-yellow)
