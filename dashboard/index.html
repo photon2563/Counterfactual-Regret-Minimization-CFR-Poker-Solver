@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTO Poker Solver — Convergence Dashboard</title>
+    <meta name="description" content="Interactive visualization dashboard for CFR-based GTO poker solver convergence analysis">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">♠</div>
+                    <div>
+                        <h1 class="logo-title">GTO Solver</h1>
+                        <p class="logo-subtitle">Counterfactual Regret Minimization</p>
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="status-badge" id="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Ready</span>
+                </div>
+                <nav class="nav-tabs" id="nav-tabs">
+                    <button class="nav-tab active" data-tab="convergence">Convergence</button>
+                    <button class="nav-tab" data-tab="strategy">Strategy</button>
+                    <button class="nav-tab" data-tab="theory">Theory</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tab: Convergence -->
+            <section class="tab-content active" id="tab-convergence">
+                <!-- Game Selector -->
+                <div class="controls-bar" id="controls-bar">
+                    <div class="control-group">
+                        <label class="control-label">Game</label>
+                        <div class="toggle-group" id="game-toggle">
+                            <button class="toggle-btn active" data-game="kuhn">Kuhn Poker</button>
+                            <button class="toggle-btn" data-game="leduc">Leduc Hold'em</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Y-Axis Scale</label>
+                        <div class="toggle-group" id="scale-toggle">
+                            <button class="toggle-btn active" data-scale="log">Log</button>
+                            <button class="toggle-btn" data-scale="linear">Linear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card glass" id="stat-exploit">
+                        <div class="stat-icon">📉</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="val-exploit">—</div>
+                            <div class="stat-label">Final Exploitability</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass" id="stat-time">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="val-time">—</div>
+                            <div class="stat-label">Training Time</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass" id="stat-infosets">
+                        <div class="stat-icon">🧠</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="val-infosets">—</div>
+                            <div class="stat-label">Information Sets</div>
+                        </div>
+                    </div>
+                    <div class="stat-card glass" id="stat-gamevalue">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="val-gamevalue">—</div>
+                            <div class="stat-label">Game Value (P0)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Chart -->
+                <div class="chart-container glass" id="convergence-chart-container">
+                    <div class="chart-header">
+                        <h2 class="chart-title">Exploitability Convergence</h2>
+                        <div class="chart-legend" id="chart-legend"></div>
+                    </div>
+                    <canvas id="convergence-canvas" width="1200" height="500"></canvas>
+                </div>
+
+                <!-- Comparison Table -->
+                <div class="table-container glass" id="comparison-table-container">
+                    <h2 class="chart-title">Algorithm Comparison</h2>
+                    <table class="data-table" id="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Algorithm</th>
+                                <th>Final Exploitability</th>
+                                <th>Training Time</th>
+                                <th>Convergence Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-tbody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tab: Strategy -->
+            <section class="tab-content" id="tab-strategy">
+                <div class="strategy-header">
+                    <h2 class="section-title">Converged Strategy Profile</h2>
+                    <p class="section-subtitle">Nash equilibrium strategy for Kuhn Poker (α = 1/3)</p>
+                </div>
+                
+                <div class="strategy-grid" id="strategy-grid">
+                    <!-- Filled dynamically -->
+                </div>
+
+                <div class="nash-comparison glass" id="nash-comparison">
+                    <h3 class="chart-title">CFR Strategy vs. Analytical Nash Equilibrium</h3>
+                    <div class="nash-table-wrapper">
+                        <table class="data-table" id="nash-table">
+                            <thead>
+                                <tr>
+                                    <th>Info Set</th>
+                                    <th>Player</th>
+                                    <th>Card</th>
+                                    <th>Action 1</th>
+                                    <th>CFR Prob</th>
+                                    <th>Nash Prob</th>
+                                    <th>Error</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nash-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Theory -->
+            <section class="tab-content" id="tab-theory">
+                <div class="theory-content">
+                    <div class="theory-card glass">
+                        <h2>Counterfactual Regret Minimization</h2>
+                        <p>CFR is a self-play algorithm that iteratively improves strategies by minimizing <em>counterfactual regret</em> at each information set. The average strategy over all iterations converges to a Nash equilibrium.</p>
+                        
+                        <div class="formula-block">
+                            <div class="formula-label">Counterfactual Value</div>
+                            <div class="formula">v<sub>i</sub>(σ, I) = Σ<sub>h∈I</sub> π<sub>-i</sub><sup>σ</sup>(h) · Σ<sub>z∈Z<sub>h</sub></sub> π<sup>σ</sup>(h,z) · u<sub>i</sub>(z)</div>
+                        </div>
+                        
+                        <div class="formula-block">
+                            <div class="formula-label">Regret Matching</div>
+                            <div class="formula">σ<sup>T+1</sup>(I, a) = R<sup>T</sup><sub>+</sub>(I, a) / Σ<sub>b</sub> R<sup>T</sup><sub>+</sub>(I, b)</div>
+                        </div>
+                    </div>
+
+                    <div class="theory-grid">
+                        <div class="theory-card glass">
+                            <h3>🎯 Vanilla CFR</h3>
+                            <p>Full game tree traversal each iteration. Computes exact counterfactual values for all information sets simultaneously.</p>
+                            <div class="tag">O(|H|) per iteration</div>
+                        </div>
+                        <div class="theory-card glass">
+                            <h3>⚡ CFR+</h3>
+                            <p>Three key modifications: non-negative regrets (floor at 0), alternating player updates, and linear averaging (weight by iteration number).</p>
+                            <div class="tag">Faster constant</div>
+                        </div>
+                        <div class="theory-card glass">
+                            <h3>🎲 External Sampling MCCFR</h3>
+                            <p>Sample opponent + chance actions, traverse all of traversing player's actions. Unbiased regret estimates with lower variance than outcome sampling.</p>
+                            <div class="tag">O(|A|) per iteration</div>
+                        </div>
+                        <div class="theory-card glass">
+                            <h3>📊 DCFR</h3>
+                            <p>Discounts early iterations via hyperparameters α, β, γ. Positive regrets discounted by t<sup>α</sup>/(t<sup>α</sup>+1), negative by t<sup>β</sup>/(t<sup>β</sup>+1).</p>
+                            <div class="tag">Tunable convergence</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
